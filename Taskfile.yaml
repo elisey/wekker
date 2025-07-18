@@ -1,0 +1,20 @@
+version: "3"
+
+vars:
+  PI_HOST: wekker
+  REMOTE_DIR: /home/wekker/deploy
+  VENV_DIR: /home/wekker/deploy/venv # how to dry
+  SCRIPT: main.py
+
+includes:
+  remote: ./tasks/Taskfile.remote.yml
+
+tasks:
+
+  run:
+    desc: Run Python program on Raspberry Pi and stream logs
+    cmds:
+      - task: remote:deploy
+      - ssh -t {{.PI_HOST}} "{{.VENV_DIR}}/bin/python3 {{.REMOTE_DIR}}/{{.SCRIPT}}"
+
+  #format, lint,

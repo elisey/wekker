@@ -1,0 +1,32 @@
+version: '3'
+
+tasks:
+  setup:
+    desc: Create virtualenv and install dependencies
+    cmds:
+      - ssh {{.PI_HOST}} mkdir {{.REMOTE_DIR}}
+      - ssh {{.PI_HOST}} "python3 -m venv -system-site-packages {{.VENV_DIR}}"
+      - rsync -avz requirements.txt {{.PI_HOST}}:{{.REMOTE_DIR}}/
+      - ssh {{.PI_HOST}} "{{.VENV_DIR}}/bin/pip install -r {{.REMOTE_DIR}}/requirements.txt"
+
+  enable:
+    desc: Enable something on the remote
+    cmds:
+      - echo "Enabling feature on remote..."
+
+  disable:
+    desc: Disable something on the remote
+    cmds:
+      - echo "Disabling feature on remote..."
+
+  clean:
+    desc: Delete project folder from Raspberry Pi
+    cmds:
+      - ssh {{.PI_HOST}} "rm -rf {{.REMOTE_DIR}}"
+
+  deploy:
+    desc: Upload project files to Raspberry Pi
+    cmds:
+      - rsync -avz --exclude '__pycache__' --exclude '.venv' ./src/ {{.PI_HOST}}:{{.REMOTE_DIR}}
+      - rsync -avz ./capmeter {{.PI_HOST}}:{{.REMOTE_DIR}}
+      - rsync -avz ./capmeter_userspace {{.PI_HOST}}:{{.REMOTE_DIR}}

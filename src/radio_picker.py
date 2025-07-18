@@ -1,0 +1,92 @@
+import random
+
+radios = [
+    'http://icecast.ofdoom.com:8000/burst.mp3',
+    'http://streams.radio.co:80/s0aa1e6f4a/listen',
+    'http://radio.stereoscenic.com/ama-h',
+    'http://nl.ah.fm:8000/live',
+    'http://radio.stereoscenic.com/asp-h',
+    'http://stream.live.vc.bbcmedia.co.uk/bbc_world_service',
+    'https://s2.radio.co/s2b2b68744/listen',
+    'http://50.116.12.253:8000/bluemars',
+    'https://cashmereradio.out.airtime.pro/cashmereradio_b',
+    'http://stream.dandelionradio.com:9414/stream',
+    'http://s3.viastreaming.net:8835/',
+    'https://cast.dialradio.live/stream.opus',
+    'http://dogglounge.com:8000',
+    'https://dublab.out.airtime.pro/dublab_a',
+    'http://direct.fipradio.fr/live/fip-midfi.mp3',
+    'https://stream.friskyradio.com',
+    'https://hirschmilch.de:7501/chillout.mp3',
+    'https://kchungradio.out.airtime.pro/kchungradio_a',
+    'http://live-mp3-128.kexp.org',
+    'https://streams.krcc.org/krcc_mp3',
+    'http://andromeda.shoutca.st:8419/stream192',
+    'http://kxlu.streamguys1.com/kxlu-hi',
+    'https://kioskradiobxl.out.airtime.pro/kioskradiobxl_b',
+    'https://listen.radioking.com/radio/477719/stream/534044',
+    'http://rfcm.streamguys1.com/thirdrock-icy',
+    'http://stream-relay-geo.ntslive.net/stream',
+    'http://stream-relay-geo.ntslive.net/stream2',
+    'http://necta.burn.net:8000/nectarine',
+    'https://streaming.radio.co/s0d090ee43/listen',
+    'http://radio.plaza.one/ogg',
+    'http://78.129.202.10:8030/',
+    'http://stream.radioparadise.com/global-192',
+    'http://stream.radioparadise.com/rp_192m.ogg',
+    'https://play.radiorivendell.com/radio/8000/radio.mp3',
+    'https://radiomeuh.ice.infomaniak.ch/radiomeuh-128.mp3',
+    'http://radio.replayscape.com:8128/',
+    'https://admin.stream.rinse.fm/proxy/rinse_uk/stream',
+    'https://patmos.cdnstream.com/proxy/sanctua1?mp=/stream',
+    'http://shonanbeachfm.out.airtime.pro:8000/shonanbeachfm_a',
+    'http://relay1.slayradio.org:8000/',
+    'http://primarystream.sleepbot.com:8218/seb',
+    'https://stream.willstare.com:8850/',
+    'https://stream.willstare.com:8860/',
+    'https://sohoradiomusic.doughunt.co.uk:8010/320mp3',
+    'http://ice2.somafm.com/deepspaceone-128-aac',
+    'http://ice2.somafm.com/dronezone-128-aac',
+    'http://ice2.somafm.com/groovesalad-128-aac',
+    'http://ice2.somafm.com/illstreet-128-aac',
+    'http://ice2.somafm.com/lush-128-aac',
+    'http://ice2.somafm.com/sf1033-128-mp3',
+    'http://ice2.somafm.com/spacestation-128-aac',
+    'https://stream.subcity.org/listen',
+    'http://stream.syntheticfm.com:8040/stream',
+    'https://mdw-prod-catalyst-0.lp-playback.studio/hls/video+85c28sa2o8wppm58/0_1/index.m3u8',
+    'https://worldwidefm.out.airtime.pro:8000/worldwidefm_a',
+]
+
+radios_selected = [
+    "https://cast1.torontocast.com:2060/;.mp3",
+    "https://www.radioking.com/play/lebouquetgranvillais",
+    "https://station.waveradio.org/provodach.mp3",
+    #"https://radio.enigmatic.su:8050/radio",
+    "http://station.waveradio.org/soviet.mp3",
+    #"http://station.waveradio.org/witch.mp3"
+]
+
+static_sound = [
+    "/home/wekker/radio1.mp3",
+    "/home/wekker/radio2.mp3",
+    "/home/wekker/radio3.mp3",
+    #"/home/wekker/radio4.mp3",
+    "/home/wekker/radio5.mp3",
+    "/home/wekker/radio6.mp3",
+]
+
+class RadioStorage:
+    def __init__(self):
+        self.current_pos = 0
+
+    def get_next_radio(self) -> str:
+        self.current_pos += 1
+        if self.current_pos >= len(radios_selected):
+            self.current_pos = 0
+
+        return radios_selected[self.current_pos]
+
+    def get_next_static(self) -> str:
+        pos = random.randint(0, len(static_sound) - 1)
+        return static_sound[pos]
