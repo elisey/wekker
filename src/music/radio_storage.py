@@ -1,5 +1,3 @@
-import random
-
 radios = [
     'http://icecast.ofdoom.com:8000/burst.mp3',
     'http://streams.radio.co:80/s0aa1e6f4a/listen',
@@ -62,19 +60,11 @@ radios_selected = [
     "https://cast1.torontocast.com:2060/;.mp3",
     "https://www.radioking.com/play/lebouquetgranvillais",
     "https://station.waveradio.org/provodach.mp3",
-    #"https://radio.enigmatic.su:8050/radio",
+    # "https://radio.enigmatic.su:8050/radio",
     "http://station.waveradio.org/soviet.mp3",
-    #"http://station.waveradio.org/witch.mp3"
+    # "http://station.waveradio.org/witch.mp3"
 ]
 
-static_sound = [
-    "/home/wekker/radio1.mp3",
-    "/home/wekker/radio2.mp3",
-    "/home/wekker/radio3.mp3",
-    #"/home/wekker/radio4.mp3",
-    "/home/wekker/radio5.mp3",
-    "/home/wekker/radio6.mp3",
-]
 
 class RadioStorage:
     def __init__(self):
@@ -82,11 +72,13 @@ class RadioStorage:
 
     def get_next_radio(self) -> str:
         self.current_pos += 1
-        if self.current_pos >= len(radios_selected):
+        if self.current_pos >= self.size():
             self.current_pos = 0
 
+        return self.get_current_radio()
+
+    def get_current_radio(self) -> str:
         return radios_selected[self.current_pos]
 
-    def get_next_static(self) -> str:
-        pos = random.randint(0, len(static_sound) - 1)
-        return static_sound[pos]
+    def size(self) -> int:
+        return len(radios_selected)

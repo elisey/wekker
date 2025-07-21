@@ -9,15 +9,35 @@ tasks:
       - rsync -avz requirements.txt {{.PI_HOST}}:{{.REMOTE_DIR}}/
       - ssh {{.PI_HOST}} "{{.VENV_DIR}}/bin/pip install -r {{.REMOTE_DIR}}/requirements.txt"
 
-  enable:
-    desc: Enable something on the remote
+  service_enable:
+    desc: Enable wekker service
     cmds:
-      - echo "Enabling feature on remote..."
+      - ssh {{.PI_HOST}} "sudo systemctl enable wekker_main.service"
 
-  disable:
-    desc: Disable something on the remote
+  service_disable:
+    desc: Disable wekker service
     cmds:
-      - echo "Disabling feature on remote..."
+      - ssh {{.PI_HOST}} "sudo systemctl disable wekker_main.service"
+
+  service_start:
+    desc: Start wekker service
+    cmds:
+      - ssh {{.PI_HOST}} "sudo systemctl start wekker_main.service"
+
+  service_stop:
+    desc: Stop wekker service
+    cmds:
+      - ssh {{.PI_HOST}} "sudo systemctl stop wekker_main.service"
+
+  service_status:
+    desc: Get status of the wekker service
+    cmds:
+      - ssh {{.PI_HOST}} "systemctl status wekker_main.service"
+
+  logs:
+    desc: Get logs
+    cmds:
+      - ssh {{.PI_HOST}} "journalctl -u wekker_main.service -f"
 
   clean:
     desc: Delete project folder from Raspberry Pi
@@ -28,5 +48,11 @@ tasks:
     desc: Upload project files to Raspberry Pi
     cmds:
       - rsync -avz --exclude '__pycache__' --exclude '.venv' ./src/ {{.PI_HOST}}:{{.REMOTE_DIR}}
-      - rsync -avz ./capmeter {{.PI_HOST}}:{{.REMOTE_DIR}}
-      - rsync -avz ./capmeter_userspace {{.PI_HOST}}:{{.REMOTE_DIR}}
+
+  update:
+    desc: Deploy new service and start it
+    cmds:
+      - task: service_stop
+      - task: deploy
+      - task: service_start
+      - task: service_status

@@ -121,8 +121,23 @@ check status
 systemctl status wekker_main.service
 ```
 
+Stop
+
+```bash
+sudo systemctl stop wekker_main.service
+```
+
 view logs
 
 ```bash
 journalctl -u wekker_main.service -f
 ```
+
+
+- ✅Сохранять текущую радиостанцию, переключать только поворотом tune
+- После будильника песни включать радио
+- Переписать radio на отдельный поток и связать через очередь комманд
+- Причесать readme
+- Добавить отправку homeassistant события при срабатывании
+- добавить логгер
+- Добавить style, lint

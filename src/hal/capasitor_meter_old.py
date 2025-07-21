@@ -75,21 +75,3 @@ class CapacitorMeter:
             self._thread.join()
             GPIO.cleanup(self.pin)
             print("🛑 Измерение остановлено")
-
-
-# Пример использования
-if __name__ == "__main__":
-    def on_change(value):
-        print(f"📢 Callback: среднее значение изменилось -> {value:.2f}")
-
-    try:
-        meter = CapacitorMeter(on_change_callback=on_change, pin=23)
-        meter.start()
-        while True:
-            time.sleep(1)
-            val = meter.get_value()
-            if val is not None:
-                print(f"📊 Среднее значение: {val:.2f}")
-    except KeyboardInterrupt:
-        print("\n🚪 Выход по Ctrl+C")
-        meter.stop()
