@@ -1,3 +1,5 @@
+import random
+
 radios = [
     'http://icecast.ofdoom.com:8000/burst.mp3',
     'http://streams.radio.co:80/s0aa1e6f4a/listen',
@@ -56,24 +58,41 @@ radios = [
     'https://worldwidefm.out.airtime.pro:8000/worldwidefm_a',
 ]
 
-radios_selected = [
-    "https://cast1.torontocast.com:2060/;.mp3",
-    "https://www.radioking.com/play/lebouquetgranvillais",
-    "https://station.waveradio.org/provodach.mp3",
-    # "https://radio.enigmatic.su:8050/radio",
-    "http://station.waveradio.org/soviet.mp3",
-    # "http://station.waveradio.org/witch.mp3"
+holly = [
+    "https://mediaserver3.afa.net:8443/talk.mp3",
+    "https://playerservices.streamtheworld.com/api/livestream-redirect/RR_MAIN.mp3",
+
 ]
+
+radios_selected = [
+    "https://www.radioking.com/play/lebouquetgranvillais",
+    "https://playerservices.streamtheworld.com/api/livestream-redirect/KINKAAC.aac",
+    "https://cast1.torontocast.com:2060/;.mp3",
+    "https://station.waveradio.org/provodach.mp3",
+    "https://radio.enigmatic.su:8050/radio",
+    #"http://station.waveradio.org/soviet.mp3",
+    #"http://station.waveradio.org/witch",
+    # "https://hemnos.cdnstream.com/1914_192",
+    # "https://ais-sa8.cdnstream1.com/3155_64.aac",
+    # "http://mp3.polskieradio.pl:8918/;",
+    # "https://netradio.classicfm.dk/classicrock",
+    # "http://217.19.211.252:8022/RadioDacha"
+]# + holly
 
 
 class RadioStorage:
+    USE_RANDOM = False
+
     def __init__(self):
         self.current_pos = 0
 
     def get_next_radio(self) -> str:
-        self.current_pos += 1
-        if self.current_pos >= self.size():
-            self.current_pos = 0
+        if self.USE_RANDOM:
+            self.current_pos = random.randint(0, self.size() - 1)
+        else:
+            self.current_pos += 1
+            if self.current_pos >= self.size():
+                self.current_pos = 0
 
         return self.get_current_radio()
 

@@ -9,6 +9,14 @@ from .radio_storage import RadioStorage
 
 
 class RadioPlayer:
+    PLAYER_UTILITY = "cvlc"
+    PLAYER_UTILITY_CMD = [
+        PLAYER_UTILITY,
+        "--aout=alsa",
+        "--intf", "dummy",
+        "--quiet"
+    ]
+
     def __init__(self) -> None:
         self.process: subprocess.Popen | None = None
         self.status: bool = False
@@ -35,7 +43,7 @@ class RadioPlayer:
         print(f"RADIO TRY START {url}")
         try:
             self.process = subprocess.Popen(
-                ["mpg123", url],
+                self.PLAYER_UTILITY_CMD + [url],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
                 start_new_session=True
@@ -47,7 +55,7 @@ class RadioPlayer:
 
             while time.time() - start_time < timeout:
                 if self.process.poll() is not None:
-                    print(f"mpg123 exited early with code {self.process.returncode}")
+                    print(f"{self.PLAYER_UTILITY} exited early with code {self.process.returncode}")
                     self.status = False
                     return False
                 time.sleep(0.1)  # check every 100ms
@@ -89,4 +97,4 @@ class RadioPlayer:
                 print(f"Failed to stop process: {e}")
             finally:
                 self.process = None
-        subprocess.Popen(["killall", "mpg123"])
+        subprocess.Popen(["killall", self.PLAYER_UTILITY])

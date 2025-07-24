@@ -1,13 +1,9 @@
-https://github.com/nosix/raspberry-gpio-emulator
-
-on mac
-brew install python-tk
-
-
-
 on remote
 sudp apt update
-sudo apt install vim mpg123
+sudo apt install vim vlc 
+
+не обязательно
+sudo apt install mpg123 mpv
 
 
 ## Setting audio
@@ -141,3 +137,5 @@ journalctl -u wekker_main.service -f
 - Добавить отправку homeassistant события при срабатывании
 - добавить логгер
 - Добавить style, lint
+- ✅Поддержка разных типов радиостанций
+- mpg123 плейер для mp3 потоков радио
