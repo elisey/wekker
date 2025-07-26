@@ -129,12 +129,20 @@ view logs
 journalctl -u wekker_main.service -f
 ```
 
+## Settings
+
+```bash
+mv settings.ini.example ~/.config/wekker/settings.ini
+vim ~/.config/wekker/settings.ini
+```
+
 
 - ✅Сохранять текущую радиостанцию, переключать только поворотом tune
 - После будильника песни включать радио
 - Переписать radio на отдельный поток и связать через очередь комманд
 - Причесать readme
-- Добавить отправку homeassistant события при срабатывании
+- ✅Добавить отправку homeassistant события при срабатывании
+- Добавить интеграцию в home assistant как медиа плейер
 - добавить логгер
 - Добавить style, lint
 - ✅Поддержка разных типов радиостанций

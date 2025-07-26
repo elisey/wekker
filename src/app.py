@@ -3,6 +3,8 @@ import time
 
 from hal import WekkerHardwareAbstract, get_hal, BinaryInput, AnalogInput
 from music import FilePlayer, RadioPlayer, MediaStorage, Media
+from settings import Settings
+from smarthome import SmarthomeDevice, DeviceEvent
 
 
 class Application:
@@ -12,6 +14,10 @@ class Application:
         self.file_player = FilePlayer()
         self.radio_player = RadioPlayer()
         self.radio_change_debounce = time.time()
+        self.settings = Settings()
+        self.settings.load()
+        self.smarthome_device = SmarthomeDevice(self.settings)
+        self.smarthome_device.connect()
 
     def run(self):
         self.hw.register_binary_input_change_handler(BinaryInput.ALARM, self.__on_binary_input_change)
@@ -29,17 +35,25 @@ class Application:
         if state:
             self.file_player.stop()
             self.radio_player.stop()
+            if binary_input == BinaryInput.ALARM or binary_input.RADIO:
+                self.smarthome_device.trigger_alarm_event(DeviceEvent.ALARM_OFF)
+            else:
+                self.smarthome_device.trigger_alarm_event(DeviceEvent.RADIO_OFF)
             return
 
         if binary_input == BinaryInput.ALARM:
             file = MediaStorage().get_media(Media.GROUNDHOG)
             self.file_player.play(file)
+            self.smarthome_device.trigger_alarm_event(DeviceEvent.ALARM_ON)
         elif binary_input == BinaryInput.RADIO or binary_input == BinaryInput.BAND:
             result = self.radio_player.play()
             if not result:
                 file = MediaStorage().get_media(Media.KRIK)
                 self.file_player.play(file)
-
+            if binary_input == BinaryInput.BAND:
+                self.smarthome_device.trigger_alarm_event(DeviceEvent.RADIO_ON)
+            else:
+                self.smarthome_device.trigger_alarm_event(DeviceEvent.ALARM_ON)
         else:
             assert False
 
@@ -65,4 +79,6 @@ class Application:
         print("radio player stop done")
         self.file_player.stop()
         print("file player stop done")
+        self.smarthome_device.disconnect()
+        print("smarthome_device disconnect done")
         sys.exit(0)
