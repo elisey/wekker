@@ -1,6 +1,6 @@
 on remote
 sudp apt update
-sudo apt install vim vlc 
+sudo apt install vim vlc i2c-tools python3-smbus
 
 не обязательно
 sudo apt install mpg123 mpv
@@ -136,6 +136,24 @@ mv settings.ini.example ~/.config/wekker/settings.ini
 vim ~/.config/wekker/settings.ini
 ```
 
+## Enable i2c
+
+```bash
+sudo raspi-config.
+```
+
+Then Interface -> Enable i2c
+
+Find I2C device
+
+```bash
+sudo apt install i2c-tools
+sudo i2cdetect -y 1
+
+or 
+
+sudo i2cdetect -y 2
+```
 
 - ✅Сохранять текущую радиостанцию, переключать только поворотом tune
 - После будильника песни включать радио

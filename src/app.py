@@ -1,8 +1,9 @@
 import sys
 import time
 
-from hal import WekkerHardwareAbstract, get_hal, BinaryInput, AnalogInput
+from hal import WekkerHardwareAbstract, get_hal, BinaryInput, AnalogInput, PCF8591
 from music import FilePlayer, RadioPlayer, MediaStorage, Media
+from volume_control import VolumeControl
 from settings import Settings
 from smarthome import SmarthomeDevice, DeviceEvent
 
@@ -18,6 +19,9 @@ class Application:
         self.settings.load()
         self.smarthome_device = SmarthomeDevice(self.settings)
         self.smarthome_device.connect()
+        adc = PCF8591()
+        self.volume_control = VolumeControl(adc)
+        self.volume_control.start()
 
     def run(self):
         self.hw.register_binary_input_change_handler(BinaryInput.ALARM, self.__on_binary_input_change)
@@ -81,4 +85,6 @@ class Application:
         print("file player stop done")
         self.smarthome_device.disconnect()
         print("smarthome_device disconnect done")
+        self.volume_control.stop()
+        print("volume_control stop done")
         sys.exit(0)
