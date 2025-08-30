@@ -3,6 +3,7 @@ from pathlib import Path
 
 from .interface import AnalogInput, BinaryInput, WekkerHardwareAbstract
 
+
 class WekkerHardwareFile(WekkerHardwareAbstract):
     def __init__(self, config_path: Path):
         self.config_path = config_path

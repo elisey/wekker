@@ -3,16 +3,14 @@
 
 import subprocess
 
-from volume_control.volume_controller import VolumeController
-
 
 class AmixerVolumeController:
     """Volume controller implementation using ALSA amixer."""
-    
+
     def set_volume(self, volume: int) -> None:
         """
         Set the system volume using amixer.
-        
+
         Args:
             volume: Volume level (0-100)
         """

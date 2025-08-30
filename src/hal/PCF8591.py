@@ -1,5 +1,6 @@
-import smbus
 import time
+
+import smbus
 
 
 class PCF8591:
@@ -23,7 +24,7 @@ class PCF8591:
             int: A stable ADC reading from the input channel. int 0–255
         """
         value = 0
-        for i in range(4):
+        for _ in range(4):
             value = self.__read_value_raw()
             if value != 128:
                 break
@@ -31,7 +32,6 @@ class PCF8591:
         return value
 
     def __read_value_raw(self) -> int:
-
         """
         Read analog value from selected channel.
 

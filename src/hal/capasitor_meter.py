@@ -1,10 +1,18 @@
-import time
 import threading
-from gpiozero import DigitalOutputDevice, DigitalInputDevice
+import time
 from collections import deque
 
+from gpiozero import DigitalInputDevice, DigitalOutputDevice
+
+
 class CapacitorMeter:
-    def __init__(self, on_change_callback, pin: int = 23, interval: float = 0.3, buffer_size: int = 10):
+    def __init__(
+        self,
+        on_change_callback,
+        pin: int = 23,
+        interval: float = 0.3,
+        buffer_size: int = 10,
+    ):
         self.on_change_callback = on_change_callback
         self.pin = pin
         self.interval = interval

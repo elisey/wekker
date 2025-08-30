@@ -1,9 +1,10 @@
+import contextlib
+
 from .interface import AnalogInput, BinaryInput, WekkerHardwareAbstract
 
-try:
+with contextlib.suppress(ImportError):
     import RPi.GPIO as GPIO
-except:
-    pass
+
 
 class WekkerHardwarePhilips(WekkerHardwareAbstract):
     PIN_ALARM_INPUT = 22
@@ -24,22 +25,32 @@ class WekkerHardwarePhilips(WekkerHardwareAbstract):
         GPIO.setmode(GPIO.BCM)
 
         GPIO.setup(self.PIN_ALARM_INPUT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(self.PIN_ALARM_INPUT, GPIO.BOTH, callback=self.__on_binary_input_change, bouncetime=self.BINARY_INPUT_DEBOUNCE)
+        GPIO.add_event_detect(
+            self.PIN_ALARM_INPUT,
+            GPIO.BOTH,
+            callback=self.__on_binary_input_change,
+            bouncetime=self.BINARY_INPUT_DEBOUNCE,
+        )
 
         GPIO.setup(self.PIN_RADIO_INPUT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(self.PIN_RADIO_INPUT, GPIO.BOTH, callback=self.__on_binary_input_change, bouncetime=self.BINARY_INPUT_DEBOUNCE)
+        GPIO.add_event_detect(
+            self.PIN_RADIO_INPUT,
+            GPIO.BOTH,
+            callback=self.__on_binary_input_change,
+            bouncetime=self.BINARY_INPUT_DEBOUNCE,
+        )
 
         GPIO.setup(self.PIN_BAND_INPUT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(self.PIN_BAND_INPUT, GPIO.BOTH, callback=self.__on_binary_input_change, bouncetime=self.BINARY_INPUT_DEBOUNCE)
-
+        GPIO.add_event_detect(
+            self.PIN_BAND_INPUT,
+            GPIO.BOTH,
+            callback=self.__on_binary_input_change,
+            bouncetime=self.BINARY_INPUT_DEBOUNCE,
+        )
 
         GPIO.setup(self.PIN_TUNE_INPUT, GPIO.IN, pull_up_down=GPIO.PUD_OFF)
 
         self.input_to_event_handler = {}
-
-
-
-        #create task to scan volume and tune
 
     def register_binary_input_change_handler(self, binary_input: BinaryInput, handler) -> None:
         # todo add checking keyerror

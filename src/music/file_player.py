@@ -1,5 +1,6 @@
 import pygame as pg
 
+
 class FilePlayer:
     def __init__(self) -> None:
         freq = 44100  # audio CD quality

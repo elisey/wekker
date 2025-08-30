@@ -17,4 +17,28 @@ tasks:
       - task: remote:deploy
       - ssh -t {{.PI_HOST}} "{{.VENV_DIR}}/bin/python3 {{.REMOTE_DIR}}/{{.SCRIPT}}"
 
-  #format, lint,
+  lint:
+    desc: Run ruff linting checks
+    cmds:
+      - . venv/bin/activate && ruff check .
+
+  format:
+    desc: Format code with ruff
+    cmds:
+      - . venv/bin/activate && ruff format .
+
+  format-check:
+    desc: Check if code needs formatting (dry-run)
+    cmds:
+      - . venv/bin/activate && ruff format --check .
+
+  lint-fix:
+    desc: Auto-fix linting issues where possible
+    cmds:
+      - . venv/bin/activate && ruff check --fix .
+
+  check:
+    desc: Run all code quality checks
+    cmds:
+      - task: lint
+      - task: format-check

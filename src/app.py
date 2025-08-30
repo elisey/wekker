@@ -1,12 +1,12 @@
 import sys
 import time
 
-from hal import WekkerHardwareAbstract, get_hal, BinaryInput, AnalogInput, PCF8591
-from music import FilePlayer, RadioPlayer, MediaStorage, Media
+from hal import PCF8591, AnalogInput, BinaryInput, WekkerHardwareAbstract, get_hal
+from music import FilePlayer, Media, MediaStorage, RadioPlayer
+from settings import Settings
+from smarthome import DeviceEvent, SmarthomeDevice
 from volume_control import VolumeControl
 from volume_control.amixer_volume_controller import AmixerVolumeController
-from settings import Settings
-from smarthome import SmarthomeDevice, DeviceEvent
 
 
 class Application:
@@ -61,7 +61,7 @@ class Application:
             else:
                 self.smarthome_device.trigger_alarm_event(DeviceEvent.ALARM_ON)
         else:
-            assert False
+            raise AssertionError("Invalid alarm type")
 
     def __can_change_radio(self) -> bool:
         current_time = time.time()

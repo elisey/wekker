@@ -1,21 +1,16 @@
-import subprocess
 import os
 import signal
+import subprocess
 import time
 
-from .media_storage import MediaStorage
 from .file_player import FilePlayer
+from .media_storage import MediaStorage
 from .radio_storage import RadioStorage
 
 
 class RadioPlayer:
     PLAYER_UTILITY = "cvlc"
-    PLAYER_UTILITY_CMD = [
-        PLAYER_UTILITY,
-        "--aout=alsa",
-        "--intf", "dummy",
-        "--quiet"
-    ]
+    PLAYER_UTILITY_CMD = [PLAYER_UTILITY, "--aout=alsa", "--intf", "dummy", "--quiet"]
 
     def __init__(self) -> None:
         self.process: subprocess.Popen | None = None
@@ -26,7 +21,7 @@ class RadioPlayer:
         if self.status:
             return True
 
-        for i in range(10):
+        for _ in range(10):
             if go_to_next_station:
                 url = self.radio_storage.get_next_radio()
             else:
@@ -46,7 +41,7 @@ class RadioPlayer:
                 self.PLAYER_UTILITY_CMD + [url],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
-                start_new_session=True
+                start_new_session=True,
             )
             print(f"PID: {self.process.pid}")
 

@@ -7,12 +7,13 @@ class BinaryInput(enum.Enum):
     RADIO = 2
     BAND = 3
 
+
 class AnalogInput(enum.Enum):
     VOLUME = 1
     TUNE = 2
 
-class WekkerHardwareAbstract(abc.ABC):
 
+class WekkerHardwareAbstract(abc.ABC):
     @abc.abstractmethod
     def close(self) -> None:
         raise NotImplementedError

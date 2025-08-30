@@ -2,8 +2,8 @@ import enum
 import threading
 import time
 
-from .volume_controller import VolumeController
 from .adc_reader import ADCReader
+from .volume_controller import VolumeController
 
 
 class FadeState(enum.Enum):
@@ -17,7 +17,7 @@ class VolumeControl(threading.Thread):
     and maps it to system-wide ALSA volume (0–100).
     Runs in the background and updates volume periodically.
     """
-    
+
     # Class constants
     FADE_IN_DURATION_MS = 5000
     POLL_INTERVAL_MS = 200
@@ -81,17 +81,17 @@ class VolumeControl(threading.Thread):
                 self.fade_state = FadeState.NORMAL
                 print("[VolumeControl] Fade-in complete")
                 return 1.0
-            
+
             coefficient = self.fade_position / self.FADE_IN_DURATION_MS
             self.fade_position += self.POLL_INTERVAL_MS
-            
+
             progress_percent = int(coefficient * 100)
             print(f"[VolumeControl] Fade-in progress: {progress_percent}%")
-            
+
             return coefficient
-        
+
         return 1.0
-    
+
     def start_fade_in(self) -> None:
         """Start fade-in effect from current position."""
         self.fade_state = FadeState.FADE_IN

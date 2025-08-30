@@ -1,10 +1,18 @@
-import time
 import threading
-import RPi.GPIO as GPIO
+import time
 from collections import deque
 
+import RPi.GPIO as GPIO
+
+
 class CapacitorMeter:
-    def __init__(self, on_change_callback=None, pin: int = 23, interval: float = 0.1, buffer_size: int = 3):
+    def __init__(
+        self,
+        on_change_callback=None,
+        pin: int = 23,
+        interval: float = 0.1,
+        buffer_size: int = 3,
+    ):
         self.on_change_callback = on_change_callback
         self.pin = pin
         self.interval = interval
@@ -26,7 +34,6 @@ class CapacitorMeter:
         # Зарядка
         GPIO.setup(self.pin, GPIO.IN)
         counter = 0
-        max_count = 100
         start_time = time.monotonic()
         while GPIO.input(self.pin) == GPIO.LOW:
             # time.sleep(0.01)
@@ -35,7 +42,7 @@ class CapacitorMeter:
             #     print("ОШИБКА ЗАРЯДКИ")
             #     return None
         elapsed_time = int((time.monotonic() - start_time) * 1000000)
-        #print(f"Время зарядки: {elapsed_time}")
+        # print(f"Время зарядки: {elapsed_time}")
         return elapsed_time
 
     def _run(self):
@@ -54,7 +61,7 @@ class CapacitorMeter:
                     if self.on_change_callback is not None:
                         self.on_change_callback(current_mean_measurement)
 
-                #print(f"⏱️  Время зарядки (в условных единицах): {current_mean_measurement}")
+                # print(f"⏱️  Время зарядки (в условных единицах): {current_mean_measurement}")
             time.sleep(self.interval)
 
     def get_value(self):

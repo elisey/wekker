@@ -18,7 +18,6 @@ radio_static_noise = [
 
 
 class MediaStorage:
-
     def get_media(self, media: Media) -> str:
         return media.value
 

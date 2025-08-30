@@ -1,8 +1,10 @@
 import enum
 import json
+
 from paho.mqtt.client import Client
 
 from settings import Settings
+
 
 class DeviceEvent(enum.Enum):
     ALARM_ON = "ALARM_ON"
@@ -13,6 +15,7 @@ class DeviceEvent(enum.Enum):
     @classmethod
     def events_as_str(cls):
         return [event.value for event in cls]
+
 
 class SmarthomeDevice:
     def __init__(self, settings: Settings):
@@ -33,12 +36,12 @@ class SmarthomeDevice:
 
     def __get_device_payload(self) -> dict:
         return {
-                "identifiers": [self.device_id],
-                "name": "Wekker",
-                "manufacturer": "Enot Labs",
-                "model": "Wekker 1.0",
-                "sw_version": "0.1.0"
-            }
+            "identifiers": [self.device_id],
+            "name": "Wekker",
+            "manufacturer": "Enot Labs",
+            "model": "Wekker 1.0",
+            "sw_version": "0.1.0",
+        }
 
     def publish_discovery(self):
         event_payload = {
@@ -50,7 +53,7 @@ class SmarthomeDevice:
             "entity_category": "diagnostic",
             "state_topic": self.event_topic,
             "event_types": DeviceEvent.events_as_str(),
-            "device": self.__get_device_payload()
+            "device": self.__get_device_payload(),
         }
         self.client.publish(self.discovery_topic, json.dumps(event_payload), retain=True)
         print("Discovery config published.")
@@ -60,9 +63,7 @@ class SmarthomeDevice:
         self.client.loop_start()
 
     def trigger_alarm_event(self, event: DeviceEvent):
-        event_payload = {
-            "event_type": event.value
-        }
+        event_payload = {"event_type": event.value}
         print("Triggering alarm event!")
         self.client.publish(self.event_topic, json.dumps(event_payload))
 

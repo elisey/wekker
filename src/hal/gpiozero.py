@@ -1,6 +1,7 @@
+from gpiozero import Button
+
 from .capasitor_meter_old import CapacitorMeter
 from .interface import AnalogInput, BinaryInput, WekkerHardwareAbstract
-from gpiozero import Button
 
 
 class WekkerHardwareGpioZero(WekkerHardwareAbstract):
@@ -22,11 +23,7 @@ class WekkerHardwareGpioZero(WekkerHardwareAbstract):
         self.capasitor_meter = CapacitorMeter(on_change_callback=self.__on_capasitor_meter_change)
         self.capasitor_meter.start()
         self._buttons = {
-            binary_input: Button(
-                pin,
-                pull_up=True,
-                bounce_time=self.BINARY_INPUT_DEBOUNCE
-            )
+            binary_input: Button(pin, pull_up=True, bounce_time=self.BINARY_INPUT_DEBOUNCE)
             for binary_input, pin in self.INPUT_TO_PIN.items()
         }
 
