@@ -56,7 +56,7 @@ class CapacitorMeter:
                 current_mean_measurement = self.get_value() // 25
                 if self._prev_mean_measurement is None:
                     self._prev_mean_measurement = current_mean_measurement
-                if abs(current_mean_measurement - self._prev_mean_measurement) > 10:
+                if abs(current_mean_measurement - self._prev_mean_measurement) > 20:
                     self._prev_mean_measurement = current_mean_measurement
                     if self.on_change_callback is not None:
                         self.on_change_callback(current_mean_measurement)

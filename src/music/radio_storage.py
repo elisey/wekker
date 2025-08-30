@@ -63,12 +63,13 @@ holly = [
     "https://playerservices.streamtheworld.com/api/livestream-redirect/RR_MAIN.mp3",
 ]
 
-radios_selected = [
-    "https://www.radioking.com/play/lebouquetgranvillais",
-    "https://playerservices.streamtheworld.com/api/livestream-redirect/KINKAAC.aac",
-    "https://cast1.torontocast.com:2060/;.mp3",
-    "https://station.waveradio.org/provodach.mp3",
-    "https://radio.enigmatic.su:8050/radio",
+radios_selected_bak = [
+    "https://www.radioking.com/play/lebouquetgranvillais",  #  mgp123
+    "https://29033.live.streamtheworld.com/KINK.mp3",  # mpg123 dutch
+    "https://cast1.torontocast.com:2060/;.mp3",  # mpg123
+    "https://station.waveradio.org/provodach.mp3",  # mpg123
+    "https://radio.enigmatic.su:8050/radio",  # cvlc
+    "https://sohoradiomusic.doughunt.co.uk:8010/320mp3",  # mpg123 slow
     # "http://station.waveradio.org/soviet.mp3",
     # "http://station.waveradio.org/witch",
     # "https://hemnos.cdnstream.com/1914_192",
@@ -77,6 +78,11 @@ radios_selected = [
     # "https://netradio.classicfm.dk/classicrock",
     # "http://217.19.211.252:8022/RadioDacha"
 ]  # + holly
+
+radios_selected = [
+    "https://29033.live.streamtheworld.com/KINK.mp3",  # mpg123 dutch
+    "https://cast1.torontocast.com:2060/;.mp3",  # mpg123 slow
+]
 
 
 class RadioStorage:
