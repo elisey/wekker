@@ -1,8 +1,14 @@
+import enum
 import threading
 import time
 
-from volume_control.kalman_filter import KalmanFilter
-from volume_control.volume_controller import VolumeController
+from .volume_controller import VolumeController
+from .adc_reader import ADCReader
+
+
+class FadeState(enum.Enum):
+    NORMAL = 1
+    FADE_IN = 2
 
 
 class VolumeControl(threading.Thread):
@@ -11,44 +17,83 @@ class VolumeControl(threading.Thread):
     and maps it to system-wide ALSA volume (0–100).
     Runs in the background and updates volume periodically.
     """
-    # todo add interface for adc
+    
+    # Class constants
+    FADE_IN_DURATION_MS = 5000
+    POLL_INTERVAL_MS = 200
+    POLL_INTERVAL_S = 0.2
 
-    def __init__(self, adc, volume_controller: VolumeController, poll_interval=0.2, min_change=2):
+    def __init__(self, adc: ADCReader, volume_controller: VolumeController, min_change: int = 2):
         """
         Args:
-            adc: An object with a read_value() -> int method returning values from 0 to 255.
+            adc: ADCReader implementation for reading analog values from 0 to 255.
             volume_controller: Implementation of VolumeController protocol for setting system volume.
-            poll_interval (float): Time between polls in seconds.
-            min_change (int): Minimum change in volume (%) to trigger volume update.
+            min_change: Minimum change in volume (%) to trigger volume update.
         """
         super().__init__(daemon=True)
         self.adc = adc
         self.volume_controller = volume_controller
-        self.poll_interval = poll_interval
         self.min_change = min_change
         self.running = True
         self.last_volume = -1
-        self.filter = KalmanFilter(process_variance=1335.0, measurement_variance=154.0)
+        self.fade_state = FadeState.NORMAL
+        self.fade_position = 0
+        self._stop_event = threading.Event()
 
     def run(self):
         while self.running:
-            raw_value = self.adc.read_value()
-            if raw_value <= 1:
-                volume = 0
-            else:
-                #smoothed = self.filter.update(raw_value)
-                volume = int(raw_value)
-                #volume = self._map_adc_to_volume(smoothed)
+            loop_start = time.time()
 
-            if abs(volume - self.last_volume) >= self.min_change:
-                print(f"volume change to {volume}")
-                self.volume_controller.set_volume(volume)
-                self.last_volume = volume
-            time.sleep(self.poll_interval)
+            current_volume = self.__read_volume_control()
+            fade_coefficient = self.__process_fade_state()
+            adjusted_volume = int(current_volume * fade_coefficient)
+            self.__set_volume(adjusted_volume)
+
+            processing_time = time.time() - loop_start
+            sleep_time = max(0, self.POLL_INTERVAL_S - processing_time)
+            if self._stop_event.wait(sleep_time):
+                break
+
+    def __set_volume(self, volume: int) -> None:
+        if abs(volume - self.last_volume) >= self.min_change:
+            print(f"volume change to {volume}")
+            self.volume_controller.set_volume(volume)
+            self.last_volume = volume
+
+    def __read_volume_control(self) -> int:
+        raw_value = self.adc.read_value()
+        if raw_value <= 1:
+            volume = 0
+        else:
+            volume = int(raw_value)
+        return volume
 
     def stop(self):
         self.running = False
+        self._stop_event.set()
 
-    def _map_adc_to_volume(self, adc_value: float) -> int:
-        return max(0, min(100, int(adc_value / 255 * 100)))
-
+    def __process_fade_state(self) -> float:
+        """Calculate volume fade coefficient based on current state."""
+        if self.fade_state == FadeState.NORMAL:
+            return 1.0
+        elif self.fade_state == FadeState.FADE_IN:
+            if self.fade_position >= self.FADE_IN_DURATION_MS:
+                self.fade_state = FadeState.NORMAL
+                print("[VolumeControl] Fade-in complete")
+                return 1.0
+            
+            coefficient = self.fade_position / self.FADE_IN_DURATION_MS
+            self.fade_position += self.POLL_INTERVAL_MS
+            
+            progress_percent = int(coefficient * 100)
+            print(f"[VolumeControl] Fade-in progress: {progress_percent}%")
+            
+            return coefficient
+        
+        return 1.0
+    
+    def start_fade_in(self) -> None:
+        """Start fade-in effect from current position."""
+        self.fade_state = FadeState.FADE_IN
+        self.fade_position = 0
+        print("[VolumeControl] Starting fade-in")
