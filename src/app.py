@@ -4,6 +4,7 @@ import time
 from hal import WekkerHardwareAbstract, get_hal, BinaryInput, AnalogInput, PCF8591
 from music import FilePlayer, RadioPlayer, MediaStorage, Media
 from volume_control import VolumeControl
+from volume_control.amixer_volume_controller import AmixerVolumeController
 from settings import Settings
 from smarthome import SmarthomeDevice, DeviceEvent
 
@@ -20,7 +21,8 @@ class Application:
         self.smarthome_device = SmarthomeDevice(self.settings)
         self.smarthome_device.connect()
         adc = PCF8591()
-        self.volume_control = VolumeControl(adc)
+        volume_controller = AmixerVolumeController()
+        self.volume_control = VolumeControl(adc, volume_controller)
         self.volume_control.start()
 
     def run(self):
