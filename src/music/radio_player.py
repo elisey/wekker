@@ -1,19 +1,14 @@
-import os
-import signal
-import subprocess
 import time
 
 from .file_player import FilePlayer
 from .media_storage import MediaStorage
+from .player_utility import PlayerUtility
 from .radio_storage import RadioStorage
 
 
 class RadioPlayer:
-    PLAYER_UTILITY = "cvlc"
-    PLAYER_UTILITY_CMD = [PLAYER_UTILITY, "--aout=alsa", "--intf", "dummy", "--quiet"]
-
-    def __init__(self) -> None:
-        self.process: subprocess.Popen | None = None
+    def __init__(self, player_utility: PlayerUtility) -> None:
+        self.player_utility = player_utility
         self.status: bool = False
         self.radio_storage = RadioStorage()
 
@@ -36,21 +31,18 @@ class RadioPlayer:
 
     def __start(self, url: str) -> bool:
         print(f"RADIO TRY START {url}")
-        try:
-            self.process = subprocess.Popen(
-                self.PLAYER_UTILITY_CMD + [url],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-                start_new_session=True,
-            )
-            print(f"PID: {self.process.pid}")
 
+        if not self.player_utility.start(url):
+            self.status = False
+            return False
+
+        try:
             start_time = time.time()
             timeout = 1.5
 
             while time.time() - start_time < timeout:
-                if self.process.poll() is not None:
-                    print(f"{self.PLAYER_UTILITY} exited early with code {self.process.returncode}")
+                if not self.player_utility.is_running():
+                    print("Player exited early")
                     self.status = False
                     return False
                 time.sleep(0.1)  # check every 100ms
@@ -81,15 +73,5 @@ class RadioPlayer:
 
     def stop(self) -> None:
         print("RADIO STOP")
-        print(f"Process: {self.process}")
-
         self.status = False
-        if self.process and self.process.poll() is None:
-            try:
-                os.killpg(self.process.pid, signal.SIGTERM)
-                self.process.wait(timeout=2)
-            except Exception as e:
-                print(f"Failed to stop process: {e}")
-            finally:
-                self.process = None
-        subprocess.Popen(["killall", self.PLAYER_UTILITY])
+        self.player_utility.stop()

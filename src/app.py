@@ -3,6 +3,7 @@ import time
 
 from hal import PCF8591, AnalogInput, BinaryInput, WekkerHardwareAbstract, get_hal
 from music import FilePlayer, Media, MediaStorage, RadioPlayer
+from music.mpg123_player_utility import MPG123PlayerUtility
 from settings import Settings
 from smarthome import DeviceEvent, SmarthomeDevice
 from volume_control import VolumeControl
@@ -14,7 +15,8 @@ class Application:
         self.hw: WekkerHardwareAbstract = get_hal("gpiozero")
 
         self.file_player = FilePlayer()
-        self.radio_player = RadioPlayer()
+        player_utility = MPG123PlayerUtility()
+        self.radio_player = RadioPlayer(player_utility)
         self.radio_change_debounce = time.time()
         self.settings = Settings()
         self.settings.load()

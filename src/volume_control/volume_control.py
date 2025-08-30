@@ -19,7 +19,7 @@ class VolumeControl(threading.Thread):
     """
 
     # Class constants
-    FADE_IN_DURATION_MS = 5000
+    FADE_IN_DURATION_MS = 15000
     POLL_INTERVAL_MS = 200
     POLL_INTERVAL_S = 0.2
 
@@ -56,7 +56,7 @@ class VolumeControl(threading.Thread):
 
     def __set_volume(self, volume: int) -> None:
         if abs(volume - self.last_volume) >= self.min_change:
-            print(f"volume change to {volume}")
+            # print(f"volume change to {volume}")
             self.volume_controller.set_volume(volume)
             self.last_volume = volume
 
@@ -85,8 +85,8 @@ class VolumeControl(threading.Thread):
             coefficient = self.fade_position / self.FADE_IN_DURATION_MS
             self.fade_position += self.POLL_INTERVAL_MS
 
-            progress_percent = int(coefficient * 100)
-            print(f"[VolumeControl] Fade-in progress: {progress_percent}%")
+            # progress_percent = int(coefficient * 100)
+            # print(f"[VolumeControl] Fade-in progress: {progress_percent}%")
 
             return coefficient
 
