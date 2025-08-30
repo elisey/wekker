@@ -54,6 +54,8 @@ class Application:
             self.file_player.play(file)
             self.smarthome_device.trigger_alarm_event(DeviceEvent.ALARM_ON)
         elif binary_input == BinaryInput.RADIO or binary_input == BinaryInput.BAND:
+            if binary_input == BinaryInput.RADIO:
+                self.volume_control.start_fade_in()
             result = self.radio_player.play()
             if not result:
                 file = MediaStorage().get_media(Media.KRIK)

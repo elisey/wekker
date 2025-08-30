@@ -11,7 +11,7 @@ class FilePlayer:
 
     def play(self, filename: str) -> bool:
         pg.mixer.music.load(filename)
-        pg.mixer.music.play()
+        pg.mixer.music.play(fade_ms=7000)
         return True
 
     def stop(self) -> None:
