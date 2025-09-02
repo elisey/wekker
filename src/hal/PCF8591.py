@@ -24,11 +24,17 @@ class PCF8591:
             int: A stable ADC reading from the input channel. int 0–255
         """
         value = 0
-        for _ in range(4):
+        counter = 0
+        forbidden_values = {128, 192}
+        for _ in range(15):
             value = self.__read_value_raw()
-            if value != 128:
+            if value not in forbidden_values:
                 break
-            time.sleep(0.01)
+            counter += 1
+            time.sleep(0.01 * counter)
+
+        if value in forbidden_values:
+            print(f"ADC: {value}")
         return value
 
     def __read_value_raw(self) -> int:

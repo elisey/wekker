@@ -20,8 +20,8 @@ class VolumeControl(threading.Thread):
 
     # Class constants
     FADE_IN_DURATION_MS = 15000
-    POLL_INTERVAL_MS = 200
-    POLL_INTERVAL_S = 0.2
+    POLL_INTERVAL_MS = 300
+    POLL_INTERVAL_S = 0.3
 
     def __init__(self, adc: ADCReader, volume_controller: VolumeController, min_change: int = 2):
         """
@@ -56,7 +56,7 @@ class VolumeControl(threading.Thread):
 
     def __set_volume(self, volume: int) -> None:
         if abs(volume - self.last_volume) >= self.min_change:
-            # print(f"volume change to {volume}")
+            print(f"volume change to {volume}. invoke cmd")
             self.volume_controller.set_volume(volume)
             self.last_volume = volume
 
