@@ -45,7 +45,7 @@ class Application:
         if state:
             self.file_player.stop()
             self.radio_player.stop()
-            if binary_input == BinaryInput.ALARM or binary_input.RADIO:
+            if binary_input == BinaryInput.ALARM or binary_input == binary_input.RADIO:
                 self.smarthome_device.trigger_alarm_event(DeviceEvent.ALARM_OFF)
             else:
                 self.smarthome_device.trigger_alarm_event(DeviceEvent.RADIO_OFF)
