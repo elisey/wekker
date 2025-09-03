@@ -23,22 +23,20 @@ class VolumeControl(threading.Thread):
     POLL_INTERVAL_MS = 300
     POLL_INTERVAL_S = 0.3
 
-    def __init__(self, adc: ADCReader, volume_controller: VolumeController, min_change: int = 2):
+    def __init__(self, adc: ADCReader, volume_controller: VolumeController):
         """
         Args:
             adc: ADCReader implementation for reading analog values from 0 to 255.
             volume_controller: Implementation of VolumeController protocol for setting system volume.
-            min_change: Minimum change in volume (%) to trigger volume update.
         """
         super().__init__(daemon=True)
         self.adc = adc
         self.volume_controller = volume_controller
-        self.min_change = min_change
         self.running = True
-        self.last_volume = -1
         self.fade_state = FadeState.NORMAL
         self.fade_position = 0
         self._stop_event = threading.Event()
+        self.current_value = None
 
     def run(self):
         while self.running:
@@ -55,10 +53,14 @@ class VolumeControl(threading.Thread):
                 break
 
     def __set_volume(self, volume: int) -> None:
-        if abs(volume - self.last_volume) >= self.min_change:
-            print(f"volume change to {volume}. invoke cmd")
+        #print(f"set volume called to {volume}")
+        if self.current_value is None or volume != self.current_value:
+            start_time = time.time()
             self.volume_controller.set_volume(volume)
-            self.last_volume = volume
+            execution_time = (time.time() - start_time) * 1000  # Convert to milliseconds
+            print(f"set_volume {volume} execution time: {execution_time:.2f}ms")
+            self.current_value = volume
+
 
     def __read_volume_control(self) -> int:
         raw_value = self.adc.read_value()

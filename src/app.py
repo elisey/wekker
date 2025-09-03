@@ -8,6 +8,7 @@ from settings import Settings
 from smarthome import DeviceEvent, SmarthomeDevice
 from volume_control import VolumeControl
 from volume_control.amixer_volume_controller import AmixerVolumeController
+from volume_control.filtered_adc_reader import FilteredADCReader
 
 
 class Application:
@@ -22,9 +23,10 @@ class Application:
         self.settings.load()
         self.smarthome_device = SmarthomeDevice(self.settings)
         self.smarthome_device.connect()
-        adc = PCF8591()
+        raw_adc = PCF8591()
+        filtered_adc = FilteredADCReader(raw_adc)
         volume_controller = AmixerVolumeController()
-        self.volume_control = VolumeControl(adc, volume_controller)
+        self.volume_control = VolumeControl(filtered_adc, volume_controller)
         self.volume_control.start()
 
     def run(self):

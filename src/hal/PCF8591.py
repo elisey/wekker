@@ -14,34 +14,10 @@ class PCF8591:
 
     def read_value(self) -> int:
         """
-        Read a stable ADC value from the PCF8591.
-
-        The PCF8591 may return a spurious or invalid value (commonly 128) on initial or unstable reads.
-        This method reads up to 4 times and returns the first value that is not equal to 128,
-        helping to filter out transient or uninitialized readings.
+        Read raw analog value from selected channel.
 
         Returns:
-            int: A stable ADC reading from the input channel. int 0–255
-        """
-        value = 0
-        counter = 0
-        forbidden_values = {128, 192}
-        for _ in range(15):
-            value = self.__read_value_raw()
-            if value not in forbidden_values:
-                break
-            counter += 1
-            time.sleep(0.01 * counter)
-
-        if value in forbidden_values:
-            print(f"ADC: {value}")
-        return value
-
-    def __read_value_raw(self) -> int:
-        """
-        Read analog value from selected channel.
-
-        :return: raw_value: int 0–255
+            int: Raw ADC reading from the input channel. Range 0-255
         """
         control_byte = 0x40 | self.channel  # Analog input, no auto-increment
 
