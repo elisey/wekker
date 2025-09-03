@@ -53,14 +53,13 @@ class VolumeControl(threading.Thread):
                 break
 
     def __set_volume(self, volume: int) -> None:
-        #print(f"set volume called to {volume}")
+        # print(f"set volume called to {volume}")
         if self.current_value is None or volume != self.current_value:
             start_time = time.time()
             self.volume_controller.set_volume(volume)
             execution_time = (time.time() - start_time) * 1000  # Convert to milliseconds
             print(f"set_volume {volume} execution time: {execution_time:.2f}ms")
             self.current_value = volume
-
 
     def __read_volume_control(self) -> int:
         raw_value = self.adc.read_value()
