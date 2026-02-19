@@ -47,7 +47,7 @@ class SmarthomeDevice:
         event_payload = {
             "unique_id": f"{self.device_id}_alarm_event",
             "name": "Wekker Alarm Event",
-            "object_id": "wekker_alarm_event",
+            "default_entity_id": "event.wekker_alarm_event",
             "icon": "mdi:alarm-bell",
             "enabled_by_default": True,
             "entity_category": "diagnostic",
