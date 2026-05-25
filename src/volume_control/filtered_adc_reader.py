@@ -19,7 +19,7 @@ class FilteredADCReader:
     """
 
     # Class constants for configuration
-    DEFAULT_BUFFER_SIZE = 2
+    DEFAULT_BUFFER_SIZE = 3
     DEFAULT_HYSTERESIS_THRESHOLD = 2
     DEFAULT_FORBIDDEN_VALUES = {128, 192}
     DEFAULT_MAX_RETRIES = 15

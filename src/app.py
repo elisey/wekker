@@ -60,7 +60,7 @@ class Application:
                 self.volume_control.start_fade_in()
             result = self.radio_player.play()
             if not result:
-                file = MediaStorage().get_media(Media.KRIK)
+                file = MediaStorage().get_media(Media.GROUNDHOG)
                 self.file_player.play(file)
             if binary_input == BinaryInput.BAND:
                 self.smarthome_device.trigger_alarm_event(DeviceEvent.RADIO_ON)
